@@ -8,9 +8,15 @@ branches.each {
         scm {
             git("git://github.com/${project}.git", branchName)
         }
+<<<<<<< HEAD
         publisher{
                 downstream("${project}.unity", 'SUCCESS')
         }
+=======
+	publisher{
+		downstream("${project}.unity", 'SUCCESS')
+	}
+>>>>>>> develop
         
     }
 }
