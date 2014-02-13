@@ -8,7 +8,7 @@ branches.each {
         scm {
             git("git://github.com/${project}.git", branchName)
         }
-	publisher{
+	publishers{
 		downstream("${project}.unity", 'SUCCESS')
 	}
         
