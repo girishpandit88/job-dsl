@@ -22,7 +22,7 @@ branches.each {
 	    def downstreamUnityJob = job {
 			name "${projectName}-${branchName}.unity".replaceAll('/','-')
 			scm {
-			    git("git://github.com/${project}.git", branchName)
+			    git("git://github.com/${projectName}.git", branchName)
 			}
 			
 		}
