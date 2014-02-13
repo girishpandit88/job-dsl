@@ -6,26 +6,22 @@ branches.each {
     job {
         name "${project}-${branchName}".replaceAll('/','-')
         label('osx')
-	scm {
-            git("git://github.com/${project}.git", branchName)
-        }
-    def downstreamUnityJob = job {
-		name "${project}-${branchName}.unity".replaceAll('/','-')
 		scm {
-		    git("git://github.com/${project}.git", branchName)
-		}
-		steps {
-				shell("mkdir -p target")
-		}
-		configure {
-			project/builders << 'org.jenkinsci.plugins.unity3d.Unity3dBuilder' {
-				argLine('-quit -batchmode -executeMethod AutoBuilder.PerformiOSBuild')
+	            git("git://github.com/${project}.git", branchName)
+	        }
+	    def downstreamUnityJob = job {
+			name "${project}-${branchName}.unity".replaceAll('/','-')
+			scm {
+			    git("git://github.com/${project}.git", branchName)
 			}
-		}
-	}
-	publishers{
-		downstream(downstreamUnityJob.name, 'SUCCESS')
-	}
-        
+			steps {
+					shell("mkdir -p target")
+			}
+			configure {
+				project/builders << 'org.jenkinsci.plugins.unity3d.Unity3dBuilder' {
+					argLine('-quit -batchmode -executeMethod AutoBuilder.PerformiOSBuild')
+				}
+			}
+		}        
     }
 }
