@@ -9,7 +9,7 @@ branches.each {
             git("git://github.com/${project}.git", branchName)
         }
 	publisher{
-		downstream("${project}.Unity", 'SUCCESS')
+		downstream("${project}.unity", 'SUCCESS')
 	}
         
     }
