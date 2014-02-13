@@ -24,7 +24,7 @@ branches.each {
 		}
 	}
 	publishers{
-		downstream(downstreamUnityJob, 'SUCCESS')
+		downstream(downstreamUnityJob.name, 'SUCCESS')
 	}
         
     }
