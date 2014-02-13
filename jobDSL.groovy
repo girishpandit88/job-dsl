@@ -4,6 +4,43 @@ def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
 branches.each { 
     def branchName = it.name
     job {
+        
+		
+		def downstreamiOSJob = job {
+			name "${projectName}-${branchName}.unity".replaceAll('/','-')
+			label('osx')
+			scm {
+			    git("git://github.com/${projectName}.git", branchName)
+			}
+			configure { project ->
+				project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
+					cleanBeforeBuild('true')
+					configuration('Debug')
+					target('Unity-iPhone')
+					configurationBuildDir("${WORKSPACE}/target/build")
+					xcodeProjectPath('target/StarTrooper')
+					embeddedProfileFile("${HOME}/Library/MobileDevice/Provisioning Profile")
+					buildIPA('true')
+					unlockKeychain('true')
+					keychainName('none (specify one below)')
+					keychainPath("${HOME}/Library/Keychains/login.keychain")
+					keychainPwd('*****')
+				}
+			}
+
+		}
+		def downstreamUnityJob = job {
+			name "${projectName}-${branchName}.unity".replaceAll('/','-')
+			label('osx')
+			scm {
+			    git("git://github.com/${projectName}.git", branchName)
+			}
+			publishers{
+				downstream(downstreamiOSJob, 'SUCCESS')
+			}
+			
+		}
+
         name "${projectName}-${branchName}".replaceAll('/','-')
         label('osx')
 		scm {
@@ -18,13 +55,10 @@ branches.each {
 				argLine('-quit -batchmode -executeMethod AutoBuilder.PerformiOSBuild')
 			}
 		}    
+		publishers{
+			downstream(downstreamUnityJob,'SUCCESS')
 
-	    def downstreamUnityJob = job {
-			name "${projectName}-${branchName}.unity".replaceAll('/','-')
-			scm {
-			    git("git://github.com/${projectName}.git", branchName)
-			}
-			
 		}
+	    
     }
 }
