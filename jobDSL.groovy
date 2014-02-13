@@ -7,7 +7,7 @@ branches.each {
         
 		
 		def downstreamiOSJob = job {
-			name "${projectName}-${branchName}.unity".replaceAll('/','-')
+			name "${projectName}-${branchName}.iOS".replaceAll('/','-')
 			label('osx')
 			scm {
 			    git("git://github.com/${projectName}.git", branchName)
