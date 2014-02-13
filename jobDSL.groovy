@@ -1,16 +1,16 @@
-def project = 'girishpandit88/StarTrooper'
+def projectName = 'girishpandit88/StarTrooper'
 def branchApi = new URL("https://api.github.com/repos/${project}/branches")
 def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
 branches.each { 
     def branchName = it.name
     job {
-        name "${project}-${branchName}".replaceAll('/','-')
+        name "${projectName}-${branchName}".replaceAll('/','-')
         label('osx')
 		scm {
-	            git("git://github.com/${project}.git", branchName)
+	            git("git://github.com/${projectName}.git", branchName)
 	        }
 	    def downstreamUnityJob = job {
-			name "${project}-${branchName}.unity".replaceAll('/','-')
+			name "${projectName}-${branchName}.unity".replaceAll('/','-')
 			scm {
 			    git("git://github.com/${project}.git", branchName)
 			}
