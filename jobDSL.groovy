@@ -18,7 +18,8 @@ branches.each {
 					shell("mkdir -p target")
 			}
 			configure {
-				project/builders << 'org.jenkinsci.plugins.unity3d.Unity3dBuilder' {
+				project / builders / 'org.jenkinsci.plugins.unity3d.Unity3dBuilder' {
+					unity3dName('unity3d')
 					argLine('-quit -batchmode -executeMethod AutoBuilder.PerformiOSBuild')
 				}
 			}
