@@ -3,14 +3,28 @@ def branchApi = new URL("https://api.github.com/repos/${projectName}/branches")
 def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
 branches.each { 
     def branchName = it.name
-    job {
-        
-		
-		def downstreamiOSJob = job {
+    def initJob = job {
+        name "${projectName}-${branchName}".replaceAll('/','-')
+        label('osx')
+		scm {
+	            git("git://github.com/${projectName}.git", branchName)
+	        }
+		 
+		publishers{
+			
+			downstream(downstreamUnityJob.name,'SUCCESS')
+		}
+	    
+    }
+    def downstreamiOSJob = job {
 			name "${projectName}-${branchName}.iOS".replaceAll('/','-')
 			label('osx')
 			scm {
 			    git("git://github.com/${projectName}.git", branchName)
+			}
+			copyArtifacts(downstreamUnityJob.name, "target/**"){
+				buildNumber('${UNITY_BUILD_NUMBER')
+
 			}
 			configure { project ->
 				project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
@@ -28,38 +42,32 @@ branches.each {
 				}
 			}
 
-		}
-
-		def downstreamUnityJob = job {
-			name "${projectName}-${branchName}.unity".replaceAll('/','-')
-			label('osx')
-			scm {
-			    git("git://github.com/${projectName}.git", branchName)
-			}
-			publishers{
-				downstream(downstreamiOSJob.name, 'SUCCESS')
-			}
-			
-		}
-
-        name "${projectName}-${branchName}".replaceAll('/','-')
-        label('osx')
+	}
+	def downstreamUnityJob = job {
+		name "${projectName}-${branchName}.unity".replaceAll('/','-')
+		label('osx')
 		scm {
-	            git("git://github.com/${projectName}.git", branchName)
-	        }
-	    steps {
-			shell("mkdir -p target")
+		    git("git://github.com/${projectName}.git", branchName)
+		}
+		steps{
+			shell('mkdir -p target')
 		}
 		configure { project ->
 			project/ builders / 'org.jenkinsci.plugins.unity3d.Unity3dBuilder'(plugin: 'unity3d-plugin@0.5') {
 				unity3dName('Unity3d')
 				argLine('-quit -batchmode -executeMethod AutoBuilder.PerformiOSBuild')
 			}
-		}    
+		}   
 		publishers{
-			downstream(downstreamUnityJob.name,'SUCCESS')
-
+			archiveArtifacts 'target/**'
+			downstreamParameterized{
+				trigger(downstreamiOSJob.name, 'SUCCESS'){
+					currentBuild()
+					predefinedProp("UNITY_BUILD_NUMBER","${BUILD_NUMBER}")
+				}
+			}
+			downstream(downstreamiOSJob.name, 'SUCCESS')
 		}
-	    
-    }
+		
+	}
 }
