@@ -10,18 +10,17 @@ branches.each {
             git("git://github.com/${project}.git", branchName)
         }
     def downstreamUnityJob = job {
-			name "${project}-${branchName}.unity".replaceAll('/','-')
-			scm {
-			    git("git://github.com/${project}.git", branchName)
-			}
-			steps {
-					shell("mkdir -p target")
-					unity{
-						name "Unity3d"
-					}
-			}
+		name "${project}-${branchName}.unity".replaceAll('/','-')
+		scm {
+		    git("git://github.com/${project}.git", branchName)
 		}
-    }
+		steps {
+				shell("mkdir -p target")
+				unity{
+					name "Unity3d"
+				}
+		}
+	}
 	publishers{
 		downstream(downstreamUnityJob, 'SUCCESS')
 	}
