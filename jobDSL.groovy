@@ -29,6 +29,7 @@ branches.each {
 			}
 
 		}
+
 		def downstreamUnityJob = job {
 			name "${projectName}-${branchName}.unity".replaceAll('/','-')
 			label('osx')
@@ -36,7 +37,7 @@ branches.each {
 			    git("git://github.com/${projectName}.git", branchName)
 			}
 			publishers{
-				downstream(downstreamiOSJob, 'SUCCESS')
+				downstream(downstreamiOSJob.name, 'SUCCESS')
 			}
 			
 		}
@@ -56,7 +57,7 @@ branches.each {
 			}
 		}    
 		publishers{
-			downstream(downstreamUnityJob,'SUCCESS')
+			downstream(downstreamUnityJob.name,'SUCCESS')
 
 		}
 	    
