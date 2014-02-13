@@ -13,12 +13,12 @@ branches.each {
 			shell("mkdir -p target")
 		}
 		configure { project ->
-			project/builders/ << 'org.jenkinsci.plugins.unity3d.Unity3dBuilder'(plugin: 'unity3d-plugin@0.5') {
+			project/builders/'org.jenkinsci.plugins.unity3d.Unity3dBuilder'(plugin: 'unity3d-plugin@0.5') {
 				unity3dName('Unity3d')
 				argLine('-quit -batchmode -executeMethod AutoBuilder.PerformiOSBuild')
 			}
 		}    
-			
+
 	    def downstreamUnityJob = job {
 			name "${projectName}-${branchName}.unity".replaceAll('/','-')
 			scm {
