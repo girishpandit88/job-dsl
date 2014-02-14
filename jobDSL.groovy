@@ -45,6 +45,7 @@ branches.each {
 		}**/
 		configure { project ->
 			project/ builders / 'hudson.plugins.copyartifact.CopyArtifact'{
+				projectName downstreamUnityJob.name
 				project downstreamUnityJob.name
 				filter 'target/**'
 				selector('class':"hudson.plugins.copyartifact.SpecificBuild"){
