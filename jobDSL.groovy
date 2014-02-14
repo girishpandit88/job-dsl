@@ -36,7 +36,7 @@ branches.each {
 		}
 		
 	}
-    downstreamiOSJob << {
+    downstreamiOSJob.with {
 		
 		copyArtifacts(downstreamUnityJob.name, "target/**"){
 			buildNumber('${UNITY_BUILD_NUMBER')
