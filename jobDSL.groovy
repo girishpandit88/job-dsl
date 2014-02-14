@@ -3,7 +3,7 @@ def branchApi = new URL("https://api.github.com/repos/${projectName}/branches")
 def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
 
 
-branches.each { 
+branches.each {
     def branchName = it.name
     def downstreamiOSJob = job{
     	name "${projectName}-${branchName}.iOS".replaceAll('/','-')
@@ -26,7 +26,7 @@ branches.each {
 				unity3dName('Unity3d')
 				argLine('-quit -batchmode -executeMethod AutoBuilder.PerformiOSBuild')
 			}
-		}   
+		}
 		publishers{
 			archiveArtifacts 'target/**'
 			downstreamParameterized{
@@ -36,15 +36,15 @@ branches.each {
 				}
 			}
 		}
-		
+
 	}
 	//print downstreamUnityJob.name
     downstreamiOSJob.with {
-		
-		
-		CopyArtifacts('gap',"target/**"){
+
+
+		/**CopyArtifacts('gap',"target/**"){
 			buildNumber("${UNITY_BUILD_NUMBER}")
-		}
+		}**/
 		configure { project ->
 			project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
 				cleanBeforeBuild('true')
@@ -61,19 +61,19 @@ branches.each {
 			}
 		}
 	}
-    
+
     def initJob = job {
         name "${projectName}-${branchName}".replaceAll('/','-')
         label('osx')
 		scm {
 	            git("git://github.com/${projectName}.git", branchName)
 	        }
-		 
+
 		publishers{
 			downstream(downstreamUnityJob.name,'SUCCESS')
 		}
-	    
+
     }
 
-	
+
 }
