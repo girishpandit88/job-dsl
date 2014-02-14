@@ -3,6 +3,7 @@ def branchApi = new URL("https://api.github.com/repos/${projectName}/branches")
 def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
 branches.each { 
     def branchName = it.name
+    	def downstreamUnityJob
         def downstreamiOSJob = job {
 			name "${projectName}-${branchName}.iOS".replaceAll('/','-')
 			label('osx')
