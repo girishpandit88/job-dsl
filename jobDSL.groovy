@@ -2,11 +2,7 @@ def projectName = 'girishpandit88/StarTrooper'
 def branchApi = new URL("https://api.github.com/repos/${projectName}/branches")
 def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
 def UNITY_BUILD_NUMBER=${BUILD_NUMBER}
-Closure c() {
-	selector ('hudson.plugins.copyartifact.SpecificBuildSelector'){
-		buildNumber("${UNITY_BUILD_NUMBER}")	
-	}
-}
+
 branches.each { 
     def branchName = it.name
     def downstreamiOSJob = job{
@@ -45,19 +41,17 @@ branches.each {
 	//print downstreamUnityJob.name
     downstreamiOSJob.with {
 		
-	/**	configure { project ->
+	configure { project ->
 			project / builders / 'hudson.plugins.copyartifact.CopyArtifact'(plugin: "copyartifact@1.28"){
-				project(downstreamUnityJob.name)
+				projectName(downstreamUnityJob.name)
 				filter('target/**')
 				selector ('hudson.plugins.copyartifact.SpecificBuildSelector'){
 					buildNumber("$UNITY_BUILD_NUMBER}")
 				}
 			}
-		}**/
+	}
 		
-		CopyArtifacts(downstreamUnityJob.name,"target/**",'',false,false,c()){
-			buildNumber("${UNITY_BUILD_NUMBER}")
-		}
+		
 		configure { project ->
 			project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
 				cleanBeforeBuild('true')
