@@ -1,22 +1,22 @@
-def projectName = 'girishpandit88/StarTrooper'
-def branchApi = new URL("https://api.github.com/repos/${projectName}/branches")
+def projName = 'girishpandit88/StarTrooper'
+def branchApi = new URL("https://api.github.com/repos/${projName}/branches")
 def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
 
 
 branches.each {
     def branchName = it.name
     def downstreamiOSJob = job{
-    	name "${projectName}-${branchName}.iOS".replaceAll('/','-')
+    	name "${projName}-${branchName}.iOS".replaceAll('/','-')
 		label('osx')
 		scm {
-		    git("git://github.com/${projectName}.git", branchName)
+		    git("git://github.com/${projName}.git", branchName)
 		}
     }
     def downstreamUnityJob = job {
-		name "${projectName}-${branchName}.unity".replaceAll('/','-')
+		name "${projName}-${branchName}.unity".replaceAll('/','-')
 		label('osx')
 		scm {
-		    git("git://github.com/${projectName}.git", branchName)
+		    git("git://github.com/${projName}.git", branchName)
 		}
 		steps{
 			shell('mkdir -p target')
@@ -71,10 +71,10 @@ branches.each {
 	}
 
     def initJob = job {
-        name "${projectName}-${branchName}".replaceAll('/','-')
+        name "${projName}-${branchName}".replaceAll('/','-')
         label('osx')
 		scm {
-	            git("git://github.com/${projectName}.git", branchName)
+	            git("git://github.com/${projName}.git", branchName)
 	        }
 
 		publishers{
