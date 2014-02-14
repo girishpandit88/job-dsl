@@ -1,6 +1,9 @@
 def projectName = 'girishpandit88/StarTrooper'
 def branchApi = new URL("https://api.github.com/repos/${projectName}/branches")
 def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
+Closure c() {
+	buildNumber("${UNITY_BUILD_NUMBER}")	
+}
 branches.each { 
     def branchName = it.name
     def downstreamiOSJob = job{
@@ -48,9 +51,7 @@ branches.each {
 				}
 			}
 		}**/
-		Closure c(){
-			buildNumber("${UNITY_BUILD_NUMBER}")	
-		}
+		
 		CopyArtifacts(downstreamUnityJob.name,"target/**",'',false,false,c()){
 			buildNumber("${UNITY_BUILD_NUMBER}")
 		}
