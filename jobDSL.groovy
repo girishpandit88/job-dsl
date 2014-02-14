@@ -36,13 +36,14 @@ branches.each {
 		}
 		
 	}
+	print "Downstream unity job: ${downstreamUnityJob.name}"
     downstreamiOSJob.with {
 		
 		configure { project ->
 			project / builders / 'hudson.plugins.copyartifact.CopyArtifact'(plugin: "copyartifact@1.28"){
-				project("${downstreamUnityJob.name}")
+				project('${downstreamUnityJob.name}')
 				filter('target/**')
-				selector 'hudson.plugins.copyartifact.SpecificBuildSelector'{
+				selector ('hudson.plugins.copyartifact.SpecificBuildSelector'){
 					buildNumber("$UNITY_BUILD_NUMBER}")
 				}
 			}
