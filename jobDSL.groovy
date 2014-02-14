@@ -36,10 +36,10 @@ branches.each {
 		}
 		
 	}
-	print downstreamUnityJob.name
+	//print downstreamUnityJob.name
     downstreamiOSJob.with {
 		
-		configure { project ->
+	/**	configure { project ->
 			project / builders / 'hudson.plugins.copyartifact.CopyArtifact'(plugin: "copyartifact@1.28"){
 				project(downstreamUnityJob.name)
 				filter('target/**')
@@ -47,7 +47,7 @@ branches.each {
 					buildNumber("$UNITY_BUILD_NUMBER}")
 				}
 			}
-		}
+		}**/
 
 		configure { project ->
 			project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
