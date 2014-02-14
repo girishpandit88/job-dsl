@@ -39,21 +39,10 @@ branches.each {
 		
 	}
 	//print downstreamUnityJob.name
-	def UnityPName=downstreamUnityJob.name
-	print UnityPName
     downstreamiOSJob.with {
 		
-		/**configure { project ->
-				project / builders / 'hudson.plugins.copyartifact.CopyArtifact'(plugin: "copyartifact@1.28"){
-					projectName("girishpandit88-StarTrooper-master.unity")
-					filter('target/**')
-					selector 'hudson.plugins.copyartifact.SpecificBuildSelector'{
-						buildNumber("${UNITY_BUILD_NUMBER}")
-					}
-				}
-		}**/
 		
-		CopyArtifacts('gap','target/**', 'target/', true, true){
+		CopyArtifacts('gap',"target/**"){
 			buildNumber("${UNITY_BUILD_NUMBER}")
 		}
 		configure { project ->
