@@ -43,7 +43,7 @@ branches.each {
 	print UnityPName
     downstreamiOSJob.with {
 		
-		configure { project ->
+		/**configure { project ->
 				project / builders / 'hudson.plugins.copyartifact.CopyArtifact'(plugin: "copyartifact@1.28"){
 					projectName("girishpandit88-StarTrooper-master.unity")
 					filter('target/**')
@@ -51,9 +51,11 @@ branches.each {
 						buildNumber("${UNITY_BUILD_NUMBER}")
 					}
 				}
+		}**/
+		
+		CopyArtifacts('gap','target/**', 'target/', true, true){
+			buildNumber("${UNITY_BUILD_NUMBER}")
 		}
-		
-		
 		configure { project ->
 			project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
 				cleanBeforeBuild('true')
