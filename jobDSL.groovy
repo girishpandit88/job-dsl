@@ -40,7 +40,7 @@ branches.each {
 	}
 	//print downstreamUnityJob.name
     downstreamiOSJob.with {
-		CopyArtifacts('gap',"target/**"){
+		CopyArtifacts('gap','target/**'){
 			buildNumber("${UNITY_BUILD_NUMBER}")
 		}
 		configure { project ->
