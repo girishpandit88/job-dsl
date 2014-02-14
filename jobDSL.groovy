@@ -48,7 +48,12 @@ branches.each {
 				}
 			}
 		}**/
-
+		Closure c(){
+			buildNumber("${UNITY_BUILD_NUMBER}")	
+		}
+		CopyArtifacts(downstreamUnityJob.name,"target/**",'',false,false,c()){
+			buildNumber("${UNITY_BUILD_NUMBER")
+		}
 		configure { project ->
 			project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
 				cleanBeforeBuild('true')
