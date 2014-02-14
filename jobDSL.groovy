@@ -45,7 +45,7 @@ branches.each {
 		
 	configure { project ->
 			project / builders / 'hudson.plugins.copyartifact.CopyArtifact'(plugin: "copyartifact@1.28"){
-				projectName(UnityPName)
+				project('girishpandit88-StarTrooper-master.unity')
 				filter('target/**')
 				selector ('hudson.plugins.copyartifact.SpecificBuildSelector'){
 					buildNumber("$UNITY_BUILD_NUMBER}")
