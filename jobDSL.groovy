@@ -39,6 +39,8 @@ branches.each {
 		
 	}
 	//print downstreamUnityJob.name
+	def UnityPName=downstreamUnityJob.name
+	print UnityPName
     downstreamiOSJob.with {
 		
 	configure { project ->
