@@ -1,22 +1,22 @@
-def projectName = 'girishpandit88/StarTrooper'
-def branchApi = new URL("https://api.github.com/repos/${projectName}/branches")
+def projName = 'girishpandit88/StarTrooper'
+def branchApi = new URL("https://api.github.com/repos/${projName}/branches")
 def branches = new groovy.json.JsonSlurper().parse(branchApi.newReader())
 
 
-branches.each { 
+branches.each {
     def branchName = it.name
     def downstreamiOSJob = job{
-    	name "${projectName}-${branchName}.iOS".replaceAll('/','-')
+    	name "${projName}-${branchName}.iOS".replaceAll('/','-')
 		label('osx')
 		scm {
-		    git("git://github.com/${projectName}.git", branchName)
+		    git("git://github.com/${projName}.git", branchName)
 		}
     }
     def downstreamUnityJob = job {
-		name "${projectName}-${branchName}.unity".replaceAll('/','-')
+		name "${projName}-${branchName}.unity".replaceAll('/','-')
 		label('osx')
 		scm {
-		    git("git://github.com/${projectName}.git", branchName)
+		    git("git://github.com/${projName}.git", branchName)
 		}
 		steps{
 			shell('mkdir -p target')
@@ -26,7 +26,7 @@ branches.each {
 				unity3dName('Unity3d')
 				argLine('-quit -batchmode -executeMethod AutoBuilder.PerformiOSBuild')
 			}
-		}   
+		}
 		publishers{
 			archiveArtifacts 'target/**'
 			downstreamParameterized{
@@ -36,15 +36,25 @@ branches.each {
 				}
 			}
 		}
-		
+
 	}
 	//print downstreamUnityJob.name
     downstreamiOSJob.with {
-		steps {
-			CopyArtifacts('gap',"target/**"){
+		steps{
+			CopyArtifacts(downstreamUnityJob.name,"target/**"){
 				buildNumber("${UNITY_BUILD_NUMBER}")
 			}
 		}
+		/**configure { project ->
+			project/ builders / 'hudson.plugins.copyartifact.CopyArtifact'{
+				projectName downstreamUnityJob.name
+				project downstreamUnityJob.name
+				filter 'target/**'
+				selector('class':"hudson.plugins.copyartifact.SpecificBuild"){
+					buildNumber "$UNITY_BUILD_NUMBER"
+				}
+			}
+		}**/
 		configure { project ->
 			project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
 				cleanBeforeBuild('true')
@@ -61,19 +71,19 @@ branches.each {
 			}
 		}
 	}
-    
+
     def initJob = job {
-        name "${projectName}-${branchName}".replaceAll('/','-')
+        name "${projName}-${branchName}".replaceAll('/','-')
         label('osx')
 		scm {
-	            git("git://github.com/${projectName}.git", branchName)
+	            git("git://github.com/${projName}.git", branchName)
 	        }
-		 
+
 		publishers{
 			downstream(downstreamUnityJob.name,'SUCCESS')
 		}
-	    
+
     }
 
-	
+
 }
