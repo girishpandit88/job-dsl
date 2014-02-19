@@ -42,7 +42,7 @@ branches.each {
     downstreamiOSJob.with {
 		steps{
 			copyArtifacts(downstreamUnityJob.name,"target/**"){
-				buildNumber("\$UNITY_BUILD_NUMBER")
+				buildParameter("\$UNITY_BUILD_NUMBER")
 			}
 		}
 		/**configure { project ->
