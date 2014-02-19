@@ -32,7 +32,7 @@ branches.each {
 			downstreamParameterized{
 				trigger(downstreamiOSJob.name, 'SUCCESS'){
 					currentBuild()
-					predefinedProp("UNITY_BUILD_NUMBER","${BUILD_NUMBER}")
+					predefinedProp("UNITY_BUILD_NUMBER","\${BUILD_NUMBER}")
 				}
 			}
 		}
@@ -42,19 +42,10 @@ branches.each {
     downstreamiOSJob.with {
 		steps{
 			copyArtifacts(downstreamUnityJob.name,"target/**"){
-				buildParameter("\$UNITY_BUILD_NUMBER")
+				buildNumber("\$UNITY_BUILD_NUMBER")
 			}
 		}
-		/**configure { project ->
-			project/ builders / 'hudson.plugins.copyartifact.CopyArtifact'{
-				projectName downstreamUnityJob.name
-				project downstreamUnityJob.name
-				filter 'target/**'
-				selector('class':"hudson.plugins.copyartifact.SpecificBuild"){
-					buildNumber "$UNITY_BUILD_NUMBER"
-				}
-			}
-		}**/
+		
 		configure { project ->
 			project/ builders / 'au.com.rayh.XCodeBuilder'(plugin: 'xcode-plugin@1.4.1'){
 				cleanBeforeBuild('true')
