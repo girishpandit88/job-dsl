@@ -31,7 +31,6 @@ branches.each {
 			archiveArtifacts 'target/**'
 			downstreamParameterized{
 				trigger(downstreamiOSJob.name, 'SUCCESS'){
-					currentBuild()
 					predefinedProp("UNITY_BUILD_NUMBER","\${BUILD_NUMBER}")
 				}
 			}
@@ -42,7 +41,7 @@ branches.each {
     downstreamiOSJob.with {
 		steps{
 			copyArtifacts(downstreamUnityJob.name,"target/**"){
-				buildNumber("\$UNITY_BUILD_NUMBER")
+				buildParameter("\$UNITY_BUILD_NUMBER")
 			}
 		}
 		
